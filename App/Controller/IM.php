@@ -42,7 +42,17 @@ class IM extends Base
 
         foreach ($fetch_uid_list as $value)
         {
+            //通知所有用户,连接数改变
             $this->call_uid($server,$value,['talking_num' => count($fetch_uid_list)],10001,
+                function($uid) use($im_uid_list_cacheKey){
+                    $this->cache->srem($im_uid_list_cacheKey,$uid);
+                });
+            //通知所有用户,有人来到了聊天室
+            $this->call_uid($server,$value,[
+                'msg' => $userMessage['user_name'] .'来到了聊天室~',
+                'username' => '系统消息',
+                'date' => date("m-d H:i:s"),
+            ],10002,
                 function($uid) use($im_uid_list_cacheKey){
                     $this->cache->srem($im_uid_list_cacheKey,$uid);
                 });
@@ -64,7 +74,7 @@ class IM extends Base
             $this->call_uid($server,$value,[
                 'msg' => $userMessage['msg'],
                 'username' => $user_info['user_name'],
-                'date' => date("Y-m-d H:i:s"),
+                'date' => date("m-d H:i:s"),
             ],10002,
                 function($uid) use($im_uid_list_cacheKey)
                 {

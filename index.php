@@ -5,7 +5,6 @@ require "vendor/autoload.php";
  *  Proword by Sapphirell. 2018.5
  */
 use App\Server\Route;
-use App\Server\Container;
 $App = new Route();
 $App->start_ws();
 

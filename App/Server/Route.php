@@ -22,7 +22,17 @@ class Route
 
 
     }
-
+    public function filter_arr($arr)
+    {
+        foreach ($arr as $key => &$value)
+        {
+            if (is_string($value))
+                $value = htmlspecialchars(addslashes($value));
+            if (is_array($value))
+                $value = $this->filter_arr($arr);
+        }
+        return $arr;
+    }
     public function __call($name, $arguments)
     {
         // TODO: Implement __call() method.
@@ -76,7 +86,7 @@ class Route
     }
     public function ws_onMessage(\swoole_websocket_server $server, $frame)
     {
-        $userMessage = json_decode($frame->data,true);
+        $userMessage = $this->filter_arr(json_decode($frame->data,true));
         if (!$userMessage)
         {
             return false;
