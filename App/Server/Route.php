@@ -18,7 +18,7 @@ class Route
         /**
          * 初始化websocket
          */
-        $this->websocketServer = new \swoole_websocket_server("0.0.0.0", "8001");
+        $this->websocketServer = new \swoole_websocket_server("0.0.0.0", "8002");
 
 
     }
@@ -57,19 +57,19 @@ class Route
     }
     public function ws_open(\swoole_websocket_server $server, $request)
     {
-        if (empty($server->model))
-        {
-            $server->model = new BaseModel();
-        }
-        else
-        {
-            $res =  $server->model
-                            ->table('test')
-                            ->select()
-                            ->where(['id'=>'1'])
-                            ->all(function ($res){
-//                                var_dump($res);
-                            });
+//        if (empty($server->model))
+//        {
+//            $server->model = new BaseModel();
+//        }
+//        else
+//        {
+//            $res =  $server->model
+//                            ->table('test')
+//                            ->select()
+//                            ->where(['id'=>'1'])
+//                            ->all(function ($res){
+////                                var_dump($res);
+//                            });
 
 //            BaseModel::$db->query("SELECT * FROM pre_comic_area",function ($db,$res) {
 //                var_dump($db);
@@ -80,7 +80,7 @@ class Route
 //                }
 //                BaseModel::$db->query("INSERT INTO test SET val = '123'",function (){});
 //            });
-        }
+//        }
 
         echo "server: handshake success with fd{$request->fd}\n";
     }
