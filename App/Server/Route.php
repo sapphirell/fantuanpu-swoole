@@ -144,6 +144,7 @@ class Route
     public function ws_onTask($server, $task_id, $from_id, $data)
     {
         echo "New AsyncTask[id=$task_id]".PHP_EOL;
+        
         //返回任务执行的结果
         $server->finish("$data -> OK");
     }
