@@ -11,6 +11,4 @@ class CacheKey
     const FD_USER = 'fd_user:' ;
     const IM_USER_NUM = 'im_user_num';
     const IM_UID_LIST = 'im_uid_list';
-    const FORUM_UID_LIST = 'forum_uid_list';
-
 }

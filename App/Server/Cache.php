@@ -52,12 +52,4 @@ class Cache
     {
         return $this->redis->smembers($keys);
     }
-    public function rPop($keys)
-    {
-        return $this->redis->rpop($keys);
-    }
-    public function lPop($keys)
-    {
-        return $this->redis->lpop($keys);
-    }
 }
