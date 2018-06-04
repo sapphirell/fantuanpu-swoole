@@ -28,7 +28,7 @@ class Base
     public function call_fd($server, int $fd, $data, $code=200, \Closure $err_fn) : bool
     {
         $msg = json_encode(['data' => $data,'code'=>$code],true);
-        $ret = (bool) $server->push($fd,$msg);
+        $ret = (bool) @ $server->push($fd,$msg);
         if (!$ret)
             $err_fn($fd);
         $this->shell_notice("发送消息{$msg}给{$fd}结果".var_export($ret,true));

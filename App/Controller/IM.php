@@ -25,7 +25,6 @@ class IM extends Base
     {
         $fd_cacheKey            = CacheKey::FD_USER . $frame->fd;
         $uid_cacheKey           = CacheKey::USER_FD . $userMessage['user_id'];
-        $im_user_num_cacheKey   = CacheKey::IM_USER_NUM;
         $im_uid_list_cacheKey   = CacheKey::IM_UID_LIST;
         //存储uid映射$fd一对多关系
         $this->cache->sadd($uid_cacheKey,$frame->fd);
@@ -35,7 +34,6 @@ class IM extends Base
             'user_name' => $userMessage['user_name'],
         ]);
         //聊天室人数+1
-        $num = $this->cache->incr($im_user_num_cacheKey);
         $this->cache->sadd($im_uid_list_cacheKey,$userMessage['user_id']);
         //通知人数+1
         $fetch_uid_list = (array) $this->cache->sMembers($im_uid_list_cacheKey);
