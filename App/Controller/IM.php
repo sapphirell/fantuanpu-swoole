@@ -70,14 +70,14 @@ class IM extends Base
         foreach ($fetch_uid_list as $value)
         {
             $this->call_uid($server,$value,[
-                'msg' => $userMessage['msg'],
-                'username' => $user_info['user_name'],
-                'date' => date("m-d H:i:s"),
+                'msg'       => $userMessage['msg'],
+                'username'  => $user_info['user_name'],
+                'date'      => date("m-d H:i:s"),
             ],10002,
-                function($uid) use($im_uid_list_cacheKey)
-                {
-                    $this->cache->srem($im_uid_list_cacheKey,$uid);
-                });
+            function($uid) use($im_uid_list_cacheKey)
+            {
+                $this->cache->srem($im_uid_list_cacheKey,$uid);
+            });
         }
         return true;
     }

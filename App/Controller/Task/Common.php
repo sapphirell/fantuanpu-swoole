@@ -1,7 +1,23 @@
 <?php
 namespace App\Controller\Task;
 
-class Common
+use App\Controller\Base;
+use App\Server\CacheKey;
+
+class Common extends Base
 {
-    public function task(){}
+    public function task()
+    {
+        echo "hello";
+    }
+    public function user_notice($server,$user_message)
+    {
+        $uid_cacheKey           = CacheKey::USER_FD . $user_message['to_uid'];
+        $forum_uid_list_cacheKey   = CacheKey::FORUM_UID_LIST;
+        var_dump($user_message);
+        $this->call_uid($server,$user_message['to_uid'],['msg'=>$user_message['msg']],20001, function($uid) use($forum_uid_list_cacheKey)
+        {
+            $this->cache->srem($forum_uid_list_cacheKey,$uid);
+        });
+    }
 }

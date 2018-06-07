@@ -130,7 +130,8 @@ class Route
                 {
                     if ($event = $server->cache->rpop("list"))
                     {
-                        $App = new Container('\App\Controller\\'.$event['class']);
+                        $event = json_decode($event,true);
+                        $App = new Container('\App\Controller\\Task\\'.$event['class']);
                         $App->builderTask($event['action'],$server,$event);
                     }
                 });

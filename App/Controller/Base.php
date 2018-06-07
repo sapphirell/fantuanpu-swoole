@@ -21,7 +21,13 @@ class Base
      * @param int      $fd
      * @param          $data
      * @param int      $code
-     *      [200=>普通提示,10001=>IM房间人数改变,10002=>IM房间内有人发消息]
+     *        [
+     *        200=>普通提示,10001=>IM房间人数改变,10002=>IM房间内有人发消息
+     * 20001 =>论坛帖子回复提醒
+     *
+     *
+     *
+     * ]
      * @param \Closure $err_fn
      * @返回 bool
      */
