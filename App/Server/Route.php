@@ -98,7 +98,6 @@ class Route
     public function ws_onMessage(\swoole_websocket_server $server, $frame)
     {
         $ret = $this->cache->rpop("list");
-        $server->tick(1000,function () {echo 1;});
         $userMessage = $this->filter_arr(json_decode($frame->data,true));
         if (!$userMessage)
         {
