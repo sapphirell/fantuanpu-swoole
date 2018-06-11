@@ -14,9 +14,10 @@ class Common extends Base
     {
         $forum_uid_list_cacheKey   = CacheKey::FORUM_UID_LIST;
         var_dump($user_message);
-        $this->call_uid($server,$user_message['to_uid'],['msg'=>$user_message['msg']],20001, function($uid) use($forum_uid_list_cacheKey)
-        {
-            $this->cache->srem($forum_uid_list_cacheKey,$uid);
-        });
+        $this->call_uid($server,$user_message['to_uid'],['msg'=>$user_message['msg']],20001,
+            function($uid) use($forum_uid_list_cacheKey)
+            {
+                $this->cache->srem($forum_uid_list_cacheKey,$uid);
+            });
     }
 }
