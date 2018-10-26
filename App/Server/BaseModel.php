@@ -69,7 +69,7 @@ class BaseModel
     public function all($callback)
     {
         if($callback instanceof \Closure )
-            return $this->db->query($this->getSql(),function ($db,$res) use ($callback)
+            return self::$db->query($this->getSql(),function ($db,$res) use ($callback)
             {
                 $callback($res);
             });

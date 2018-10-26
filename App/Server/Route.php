@@ -22,7 +22,7 @@ class Route
          * 初始化websocket
          */
         $this->websocketServer = new \swoole_websocket_server("0.0.0.0", "8002"
-//            ,SWOOLE_PROCESS, SWOOLE_SOCK_TCP | SWOOLE_SSL
+            ,SWOOLE_PROCESS, SWOOLE_SOCK_TCP | SWOOLE_SSL
         );
 
     }
@@ -65,8 +65,8 @@ class Route
         $this->websocketServer->set([
             'worker_num'      => 4,
             'task_worker_num' => 1,
-//            'ssl_key_file' => '/root/fantuanpu-swoole/cert/cert-1540533168951_ws.fantuanpu.com.key',
-//            'ssl_cert_file' => '/root/fantuanpu-swoole/cert/cert-1540533168951_ws.fantuanpu.com.crt'
+            'ssl_key_file' => '/root/fantuanpu-swoole/cert/cert-1540533168951_ws.fantuanpu.com.key',
+            'ssl_cert_file' => '/root/fantuanpu-swoole/cert/cert-1540533168951_ws.fantuanpu.com.crt'
         ]);
         $this->websocketServer->start();
     }
@@ -79,13 +79,14 @@ class Route
 //        }
 //        else
 //        {
-            $res =  $server->model
-                            ->table('test')
-                            ->select()
-                            ->where(['id'=>'1'])
-                            ->all(function ($res){
+//            $server->model = new BaseModel();
+//            $res =  $server->model
+//                            ->table('test')
+//                            ->select()
+//                            ->where(['id'=>'1'])
+//                            ->all(function ($res){
 //                                var_dump($res);
-                            });
+//                            });
 
 //            BaseModel::$db->query("SELECT * FROM pre_comic_area",function ($db,$res) {
 //                var_dump($db);
