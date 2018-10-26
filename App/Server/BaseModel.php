@@ -47,15 +47,19 @@ class BaseModel
     {
         $this->mysql->connect(
             [
-                'host' => '127.0.0.1',
-                'user' => 'root',
-                'password' => '123',
-                'database' => 'fantuanpu2018',
+                'host' => '103.56.55.156',
+                'user' => 'fantuanpu_remote',
+                'password' => 'fantuanpu_123',
+                'database' => 'fantuanpu_2019',
                 'charset' => 'utf8'
             ],
             function ($db, $result) {
+
                 if ($result)
-                    return self::$db = $db;
+                {
+                    self::$db = $db;
+                }
+
                 else
                     echo "Mysql connect failed \n";
 
@@ -65,7 +69,7 @@ class BaseModel
     public function all($callback)
     {
         if($callback instanceof \Closure )
-            return self::$db->query($this->getSql(),function ($db,$res) use ($callback)
+            return $this->db->query($this->getSql(),function ($db,$res) use ($callback)
             {
                 $callback($res);
             });
