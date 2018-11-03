@@ -46,13 +46,7 @@ class BaseModel
     public function connect()
     {
         $this->mysql->connect(
-            [
-                'host' => '103.56.55.156',
-                'user' => 'fantuanpu_remote',
-                'password' => 'fantuanpu_123',
-                'database' => 'fantuanpu_2019',
-                'charset' => 'utf8'
-            ],
+            Config::DB,
             function ($db, $result) {
 
                 if ($result)
@@ -92,10 +86,14 @@ class BaseModel
 
         $sql = "SELECT {$select} FROM {$table} WHERE 1=1 ";
         //where
-        foreach ($this->queryParam['where'] as $key=>$value)
+        if (!empty($this->queryParam['where']))
         {
-            $sql .= " AND `{$key}` = '$value'";
+            foreach ($this->queryParam['where'] as $key=>$value)
+            {
+                $sql .= " AND `{$key}` = '$value'";
+            }
         }
+//        echo $sql;
         return $sql;
     }
 

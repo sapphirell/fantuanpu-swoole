@@ -34,11 +34,16 @@ class Cache
         try{
             $this->redis = new \redis();
             $this->redis->connect('127.0.0.1','6379');
+            $this->redis->auth('fantuanpu_sw233');
         }
         catch (PDOException $exception)
         {
             var_dump($exception);
         }
+    }
+    public function incr($keys,$param)
+    {
+        return $this->redis->incr($keys, $param);
     }
     public function HmGet($keys,array $param)
     {

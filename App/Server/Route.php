@@ -43,7 +43,7 @@ class Route
     }
     protected function call_shell($msg)
     {
-        echo $msg . '\n';
+        echo $msg . '\n\r';
         return true;
     }
     public function start_ws()
@@ -63,6 +63,7 @@ class Route
         });
 
         $this->websocketServer->set([
+//            'daemonize' => true, //是否作为守护进程
             'worker_num'      => 4,
             'task_worker_num' => 1,
             'ssl_key_file' => '/root/fantuanpu-swoole/cert/cert-1540533168951_ws.fantuanpu.com.key',
@@ -107,7 +108,7 @@ class Route
     }
     public function ws_onMessage(\swoole_websocket_server $server, $frame)
     {
-        $ret = $this->cache->rpop("list");
+//        $ret = $this->cache->rpop("list");
         $userMessage = $this->filter_arr(json_decode($frame->data,true));
         if (!$userMessage)
         {
@@ -129,21 +130,31 @@ class Route
     {
         if ($worker_id < $server->setting['worker_num'])
         {
+
             //worker 进程 初始化model和cache
             $server->model = new BaseModel();
             $server->cache = new Cache();
 
             if (!in_array($worker_id,(array)$this->cache->sMembers('tick')))
+            {
+//                $this->call_shell('正在启动任务定时器...');
                 //为每个worker初始化唯一定时器
-                $server->tick(2000,function ($timer_id) use($worker_id,$server)
+                $server->tick(1000,function ($timer_id) use($worker_id,$server)
                 {
                     if ($event = $server->cache->rpop("list"))
                     {
+                        $this->call_shell('执行任务'.$event);
                         $event = json_decode($event,true);
                         $App = new Container('\App\Controller\\Task\\'.$event['class']);
                         $App->builderTask($event['action'],$server,$event);
                     }
+                    else
+                    {
+
+                    }
                 });
+            }
+
         }
         else
         {

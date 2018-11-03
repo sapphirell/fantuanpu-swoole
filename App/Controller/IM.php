@@ -82,6 +82,9 @@ class IM extends Base
                             `uid`      = '{$user_info['user_id']}',
                             `avatar`   = '{$userMessage['avatar']}'
                             ",function ($e) {
+                                var_dump($e);
+//                                if ($e->connect_errno)
+//                                    var_dump($e);
                             });
         //通知所有fd
         $fetch_uid_list = (array) $this->cache->sMembers($im_uid_list_cacheKey);
