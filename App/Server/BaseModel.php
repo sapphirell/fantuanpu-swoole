@@ -96,5 +96,22 @@ class BaseModel
 //        echo $sql;
         return $sql;
     }
-
+    public static function update($table,array $update,array $where)
+    {
+        $query = "UPDATE {$table} ";
+        foreach ($update as $key => $value)
+        {
+            $query .= " SET {$key} = {$value} ";
+            if ($key != count($update) -1)
+                $query .= ",";
+        }
+        $query .= " WHERE ";
+        foreach ($where as $key => $value)
+        {
+            $query .= "{$key} = {$value} ";
+            if ($key != count($update) -1)
+                $query .= " AND ";
+        }
+        return $query;
+    }
 }

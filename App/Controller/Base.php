@@ -15,6 +15,7 @@ class Base
     public function shell_notice($msg)
     {
         echo $msg . "\r\n";
+        return false;
     }
     /**
      * @param          $server

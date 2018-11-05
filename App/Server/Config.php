@@ -23,4 +23,11 @@ class Config
         'extcredits7' => '分享积分',
         'extcredits8' => '图点',
     ];
+    public static function ext()
+    {
+        foreach (self::$extcredits as $key => $value)
+            $ext[$key] = 0;
+
+        return $ext;
+    }
 }
