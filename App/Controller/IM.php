@@ -74,18 +74,30 @@ class IM extends Base
         //存储消息 -_- model不完善,只能硬拼sql了
 
         $now_date = date("Y-m-d H:i:s");
+        ;
         //记录消息
-        BaseModel::$db->query("INSERT INTO `pre_web_im` SET
-                            `username` = '{$user_info['user_name']}' ,
-                            `postdate` = '{$now_date}' ,
-                            `message`  = '{$userMessage['msg']}',
-                            `uid`      = '{$user_info['user_id']}',
-                            `avatar`   = '{$userMessage['avatar']}'
-                            ",function ($e) {
-                                var_dump($e);
-//                                if ($e->connect_errno)
-//                                    var_dump($e);
-                            });
+//        BaseModel::$db->query("INSERT INTO `pre_web_im` SET
+//                            `username` = '{$user_info['user_name']}' ,
+//                            `postdate` = '{$now_date}' ,
+//                            `message`  = '{$userMessage['msg']}',
+//                            `uid`      = '{$user_info['user_id']}',
+//                            `avatar`   = '{$userMessage['avatar']}'
+//                            ",function ($e) {
+//                                var_dump($e);
+////                                if ($e->connect_errno)
+////                                    var_dump($e);
+//                            });
+        $query = BaseModel::insert("pre_web_im",[
+            "username"  =>$user_info['user_name'],
+            "postdate"  =>$now_date ,
+            "message"   =>$userMessage['msg'],
+            "uid"       => $user_info['user_id'],
+            "avatar"    => $userMessage['avatar']
+        ]);
+        var_dump($query);
+        $server->model->query($query , function ($e) {
+            var_dump($e);
+        });
         //通知所有fd
         $fetch_uid_list = (array) $this->cache->sMembers($im_uid_list_cacheKey);
         foreach ($fetch_uid_list as $value)

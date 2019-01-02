@@ -43,15 +43,16 @@ class BaseModel
         $this->querySql = [] ;
         return $this ;
     }
-    public function connect()
+    public function connect($connect_fn = "")
     {
         $this->mysql->connect(
             Config::DB,
-            function ($db, $result) {
+            function ($db, $result) use ($connect_fn) {
 
                 if ($result)
                 {
                     self::$db = $db;
+                    $connect_fn && $connect_fn();
                 }
 
                 else
@@ -60,17 +61,51 @@ class BaseModel
             });
 
     }
+
+    /**
+     *
+     * @param        $query
+     * @param string $callable
+     */
+    public function query($query,$callable='')
+    {
+        //这是将要执行的query方法
+        $to_do = function () use ($query , $callable)
+        {
+            if($callable instanceof \Closure )
+                return self::$db->query($query,function ($db,$res) use ($callable)
+                {
+                    $callable($res);
+                });
+        };
+        //执行query前,要检查是否处于链接状态,否则把query方法包起来,给connect执行
+        if (self::$db->connected == false)
+            $this->connect($to_do);
+        else
+            $to_do();
+    }
     public function all($callback)
     {
-        if($callback instanceof \Closure )
-            return self::$db->query($this->getSql(),function ($db,$res) use ($callback)
-            {
-                $callback($res);
-            });
+        $query = function () use ($callback){
+            if($callback instanceof \Closure )
+                return self::$db->query($this->getSql(),function ($db,$res) use ($callback)
+                {
+                    $callback($res);
+                });
+            else
+                return false;
+        };
+        if (self::$db->connected == false)
+        {
+            $this->connect($query);
+        }
         else
-            return false;
+        {
+            $query();
+        }
 
     }
+
     public function getSql()
     {
         //select
@@ -96,22 +131,43 @@ class BaseModel
 //        echo $sql;
         return $sql;
     }
+
+    /**
+     * 生成sql语句
+     * @param       $table
+     * @param array $update
+     * @param array $where
+     * @返回 string
+     */
     public static function update($table,array $update,array $where)
     {
-        $query = "UPDATE {$table} ";
+        $query = "UPDATE {$table}  SET ";
         foreach ($update as $key => $value)
         {
-            $query .= " SET {$key} = {$value} ";
-            if ($key != count($update) -1)
-                $query .= ",";
+            $query .= " {$key} = '".addslashes(htmlspecialchars($value))."' ,";
         }
+        $query = rtrim($query,',');
         $query .= " WHERE ";
         foreach ($where as $key => $value)
         {
-            $query .= "{$key} = {$value} ";
+            $query .= " {$key} = '".addslashes(htmlspecialchars($value))."'  AND";
             if ($key != count($update) -1)
-                $query .= " AND ";
+                $query .= "";
         }
+        $query = rtrim($query,'AND');
         return $query;
+    }
+
+    /**
+     * 生成insert 语句
+     */
+    public static function insert($table,array $insert)
+    {
+        $query = "INSERT INTO {$table}  SET ";
+        foreach ($insert as $key => $value)
+        {
+            $query .= "{$key} = '".addslashes(htmlspecialchars($value))."' ,";
+        }
+        return rtrim($query,',');
     }
 }

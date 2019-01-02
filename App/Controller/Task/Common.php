@@ -55,16 +55,16 @@ class Common extends Base
                 $user_sign['hit']       = $dif > 1 ? 1 : $user_sign['hit'] + 1;
                 $user_sign['sign_date'] = date("Y-m-d");
                 $user_sign['sign_time'] = time();
+                //更新签到到数据库
+                $query = BaseModel::update('pre_user_sign',$user_sign,['uid'=>$user_message['uid']]);
 
-                BaseModel::$db->query(BaseModel::update('pre_user_sign',$user_sign,['uid',$user_message['uid']]),
-                    function ($event) use($user_sign,$user_message,$server) {
-                        //这是当天第几个签到
-                        $cache      = new Cache();
-                        $sign_num   = $cache->incr('sign_'.date("Y-m-d") ,1);
+                $server->model->query($query,function ($event) use($user_sign,$user_message,$server) {
+                    //这是当天第几个签到
+                    $cache      = new Cache();
+                    $sign_num   = $cache->incr('sign_'.date("Y-m-d") ,1);
+                    $sign_message = self::_user_sign_ext_message($user_message['uid'],$sign_num,$user_sign['hit']);
 
-                        $sign_message = self::_user_sign_ext_message($user_message['uid'],$sign_num,$user_sign['hit']);
-
-                        $this->call_uid($server,$user_message['uid'],['msg' => $sign_message],30001,function($uid){});
+                    $this->call_uid($server,$user_message['uid'],['msg' => $sign_message],30001,function($uid){});
                 });
             });
 
@@ -103,7 +103,7 @@ class Common extends Base
         }
         elseif($sign_num < 11)
         {
-            $msg .= "额外奖励扑币 90" ;
+            $msg .= "额外奖励扑币 40" ;
             $ext['extcredits2'] += 40;
         }
         elseif($sign_num < 101)

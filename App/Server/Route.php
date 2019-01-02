@@ -118,7 +118,14 @@ class Route
         {
             return $this->call_shell("Type or action not found! ");
         }
-        $server->model = new BaseModel();
+//        $server->model = new BaseModel();
+//        $res =  $server->model
+//                        ->table('test')
+//                        ->select()
+//                        ->where(['id'=>'1'])
+//                        ->all(function ($res){
+//                            var_dump($res);
+//                        });
         //使用依赖注入容器做伪路由
         $App = new Container('\App\Controller\\'.$userMessage['type']);
         return $App->builderController($userMessage['action'],$server,$frame,$userMessage);
